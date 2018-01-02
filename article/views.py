@@ -123,6 +123,7 @@ def status(request, pk):
     user_posts = Post.objects.filter(author=pk) # user's post
     post_cnt = user_posts.count()
 
+
     if total_posts != 0:
         post_pct = post_cnt * 100 / total_posts
         post_pct = round(post_pct, 2)
@@ -137,7 +138,7 @@ def status(request, pk):
     return render(request, 'status.html', {
         'profile':profile, 'post_cnt':post_cnt, 'like_cnt':like_cnt,
         'post_pct':post_pct, 'fol_cnt':fol_cnt, 'sub_cnt':sub_cnt,
-        'like_avg':like_avg })
+        'like_avg':like_avg, 'user_posts':user_posts })
 
 def search(request):
     keyword = request.POST.get('search')

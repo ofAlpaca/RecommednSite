@@ -91,7 +91,7 @@
             </div>
             <div class="panel-footer"style="padding:10px;">
                 {% for sub in profile.subers.all %}
-                    <span class="label label-warning">{{ sub }}</span>
+                    <span class="label label-warning"><a style="color:#fff" href="{% url 'status' sub.pk %}">{{ sub }}</a></span>
                 {% endfor %}
             </div>
         </div>
@@ -113,11 +113,37 @@
                 </div>
                 <div class="panel-footer"style="padding:10px;">
                     {% for sub in profile.subs.all %}
-                        <span class="label label-success">{{ sub }}</span>
+                        <span class="label label-success"><a style="color:#fff" href="{% url 'status' sub.pk %}">{{ sub }}</a></span>
                     {% endfor %}
                 </div>
             </div>
         </div>
+
+    <div class="twelve columns">
+        <h4>Posted Article</h4>
+        <div class="panel panel-default">
+            <div class="panel-body"style="padding:10px;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Title</th>
+                            <th>last modify date</th>
+                        </tr>
+                    </thead>
+                    <tbod>
+                        {% for p in user_posts %}
+                            <tr>
+                                <th> {{ forloop.counter }}</th>
+                                <td><a href="{% url 'post_article' p.pk %}">{{ p.title }}</a></td>
+                                <td>{{ p.last_mod }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbod>
+                </table>
+            </div>
+        </div>
+    </div>
 
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

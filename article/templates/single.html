@@ -60,7 +60,7 @@
                 <div class="panel-heading"><h3 class="panel-title">About Author : {{ author.user }}</h3></div>
                 <div class="panel-body">
                     <div class="three columns">
-                        <img class="center thumbnail" src="{{ author.photo_url }}"  height="120" width="120"></img>
+                        <a href="{% url 'status' author.user.pk %}"><img class="center thumbnail" src="{{ author.photo_url }}"  height="120" width="120"></img></a>
                         {% if sub_stat == "Follow" %}
                         <button id="btn-follow" class="btn btn-success">
                             <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>

@@ -86,10 +86,10 @@ WSGI_APPLICATION = 'RecommendSite.wsgi.application'
 DATABASES = {
     'default':{
         'ENGINE' : 'django.db.backends.mysql',
-        'NAME' : 'shaushian@Website',
-        'USER' : 'shaushian',
-        'PASSWORD' : 'Frank01104@mysql',
-        'HOST' : 'shaushian.mysql.pythonanywhere-services.com',
+        'NAME' : 'WebSite',
+        'USER' : 'django',
+        'PASSWORD' : 'frank011049',
+        'HOST' : '192.168.56.102',
         'PORT' : '3306',
     },
 }
