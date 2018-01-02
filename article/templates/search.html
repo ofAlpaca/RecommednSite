@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load comments %}
+{% load filter %}
+
+{% block title %}Dank Memes{% endblock %}
+
+{% block content %}
+   <!-- Content ================================================== -->
+    <div id="content-wrap">
+   	<div class="row">
+		<div id="main" class="twelve columns">
+			<h1>Search Result for "{{key}}"</h1><hr>
+			{% if posts %}
+				{% for p in posts %}
+					<article class="entry">
+						<header>
+							<h2>
+								<a href="{% url 'post_article' p.pk %}">{{ p.title }}</a>
+							</h2>
+							<div class="entry-meta">
+								<ul>
+									<li>{{ p.last_mod }}</li>
+									<span class="meta-sep">&bull;</span>
+									<li>{{ p.author }}</li>
+								</ul>
+							</div>
+						</header>
+						<div class=" group">
+							{% for tag in p.get_tags_as_list %}
+								<span class="label label-success"><i class="fa fa-tag" aria-hidden="true"></i> {{ tag }}</span>
+							{% endfor%}
+						</div>
+					</article>
+					<hr>
+				{% endfor %}
+			{% else %}
+				<p>Sorry, no result was found!</p>
+			{% endif %}
+		</div>
+   	</div> <!-- end row -->
+   </div> <!-- end content-wrap -->
+   
+{% endblock %}

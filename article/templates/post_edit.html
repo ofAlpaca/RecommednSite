@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Article Edit{% endblock %}
+
+{% block content %}
+    {% if type == 'NEW' %}
+        <h1>New Article</h1>
+    {% else %}
+        <h1>Edit Article</h1>
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.media }}
+        {% for field in form %}
+            {% if field.name != "likes" %}
+                <label required>{{ field.label_tag }}</label>
+                {{ field }}
+            {% endif %}
+        {% endfor %}
+        <hr>
+        <input type="submit" value="Post"/>
+        {% if type == 'NEW' %}
+            <a href="{% url 'index' %}" class="button nounderline">Cancel</a>
+        {% else %}
+            <a href="{% url 'post_article' pk %}" class="button nounderline">Cancel</a>
+        {% endif %}
+    </form>
+{% endblock %}

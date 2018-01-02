@@ -1,0 +1,97 @@
+{% load i18n %}
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    {% block meta %}
+    {% endblock %}
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/default.css' %}">
+	<link rel="stylesheet" href="{% static 'css/layout.css' %}">  
+    <link rel="stylesheet" href="{% static 'css/media-queries.css' %}"> 
+    <script src="{% static 'js/modernizr.js' %}"></script>
+
+    <!-- Favicons
+     ================================================== -->
+    <link rel="shortcut icon" href="{% static 'images/meme.png' %}" >
+
+</head>
+
+<body>
+    <header id="top">
+    	<div class="row">
+   		    <div class="header-content twelve columns">
+		      <h1 id="logo-text"><a href="{% url 'index' %}" >Dank Memes.</a></h1>
+				<p id="intro">Smoke weed a day, keep cap away...</p>
+			</div>			
+	    </div>
+	    <nav id="nav-wrap"> 
+            <div class="row">    		            
+                    <ul class="text-right"> 	
+                        <li>	   	 
+                            {% block header %}
+                            {% if user.is_authenticated %}
+                            Welcome: <a href="{% url 'profile' %}">{{ user.username }}</a>
+                            (<a href="{% url 'auth_logout' %}">{% trans "Log out" %}</a> |
+                            <a href="{% url 'auth_password_change' %}">{% trans "Change password" %}</a>)
+                            {% else %}
+                            <a href="{% url 'auth_login' %}">Log In</a> | 
+                            <a href="{% url 'registration_register' %}">Sign Up</a>
+                            {% endif %}
+                            {% endblock %}
+                        </li>
+                    </ul>
+            </div> 
+	    </nav> <!-- end #nav-wrap --> 	     
+   </header> <!-- Header End -->
+
+   <div id="content-wrap">
+        <div class="row">
+            <div id="main" class="twelve columns">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+   <!-- Footer
+   ================================================== -->
+   <footer>
+        {% block footer %}
+        {% endblock %}
+      <div class="row"> 
+      	<div class="twelve columns">	
+				<ul class="social-links">
+               <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+               <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+               <li><a href="#"><i class="fa fa-google-plus"></i></a></li>               
+               <li><a href="#"><i class="fa fa-github-square"></i></a></li>
+               <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+               <li><a href="#"><i class="fa fa-flickr"></i></a></li>               
+               <li><a href="#"><i class="fa fa-skype"></i></a></li>
+            </ul>			
+      	</div>
+         
+         <p class="copyright">&copy; Copyright 2017 Somke weed. &nbsp; Design by <a title="Styleshout" href="http://www.styleshout.com/">Styleshout</a>.</p>
+        
+      </div> <!-- End row -->
+
+      <div id="go-top">
+          <a class="smoothscroll" title="Back to Top" href="#top">
+              <i class="fa fa-chevron-up"></i>
+            </a>
+        </div>
+
+   </footer> <!-- End Footer-->
+
+</body>
+   <!-- Java Script
+   ================================================== -->
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+   <script>window.jQuery || document.write('<script src="js/jquery-1.10.2.min.js"><\/script>')</script>
+   <script type="text/javascript" src="{% static 'js/jquery-migrate-1.2.1.min.js' %}"></script>  
+   <script src="{% static 'js/main.js' %}"></script>
+</html>

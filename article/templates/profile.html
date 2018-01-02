@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Account Profile{% endblock %}
+
+{% block content %}
+<div id="profile">
+    <h1>Account Profile</h1>
+    {% if stat %}
+        <div class="alert alert-success" role="alert">Profile Successfully Saved!</div>
+    {% endif %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="four columns">
+                <img class="thumbnail" width="180" height="180" id="img_id" src="{{ profile.photo_url }}"  />
+                <input type='url' name="url" onchange="upload_img(this);" value="{{ profile.photo_url }}" />
+        </div>
+        <div class="eight columns">
+                <h4>Username (readonly):</h4><input type="text" name="username" value="{{user.username}}" readonly>
+                <h4>Email (readonly):</h4><input type="text" name="email" value="{{user.email}}" readonly>
+                <h4>First Name:</h4><input type="text" name="firstname_field" value="{{profile.firstname_field}}">
+                <h4>Last Name:</h4><input type="text" name="lastname_field" value="{{profile.lastname_field}}">
+                <h4>Address:</h4><input type="text" name="location" value="{{profile.location}}">
+                <h4>Signature:</h4><textarea name="intro">{{profile.intro}}</textarea>
+                <hr>
+                <input type="submit" value="Save" />
+                <a class="button nounderline" href="{% url 'index' %}">Cancel</a>
+        </div>
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    function upload_img(input) {
+        $('#img_id').attr('src', input.value);
+    }
+</script>
+{% endblock %}

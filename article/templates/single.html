@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load comments %}
+{% load static %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<div id="content-wrap">
+        <div class="row">
+            <div id="main" class="twelve columns">
+                <article class="entry">
+                     <header class="entry-header">
+                         <h2 class="entry-title">
+                             <a href="{% url 'post_article' post.pk %}">{{ post.title }}</a>
+                             {% if user.is_authenticated and user == author.user %}
+                             <a style="float:right;" href="{% url 'post_edit_article' post.pk %}">
+                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                             </a>
+                             {% endif %}
+                         </h2> 				 
+                         <div class="entry-meta">
+                             <ul>
+                                 <li>{{ post.last_mod }}</li>
+                                 <span class="meta-sep">&bull;</span>							
+                                 <li>{{ post.author }}</li>
+                             </ul>
+                         </div> 
+                         <div class="group">
+                                {% for tag in post.get_tags_as_list %}
+                                    <span class="label label-success"><i class="fa fa-tag" aria-hidden="true"></i> {{ tag }}</span>
+                                {% endfor%}
+                        </div>
+                      </header>  
+                     <div class="entry-content">
+                         <p class="lead">{{ post.content }}</p>
+                         <p>{{ post.ck_content | safe }}</p>
+                     </div>
+                 </article>
+                 <div>
+                     {% if user.is_authenticated %}
+                        <button  id="btn-like" class="btn btn-danger 
+                        {% if ald_like %}
+                            active
+                        {% endif %}
+                        " type="button">
+                            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span>
+                            <span id="like_cnt" class="badge">{{ likes }}</span>
+                        </button>
+                        {% if user == author.user %}
+                            <a style="float:right;" href="{% url 'delete_own_article' post.pk %}">
+                                <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                 </div>
+            <hr>
+            <!-- About Author -->
+            <div class="panel panel-default">
+                <div class="panel-heading"><h3 class="panel-title">About Author : {{ author.user }}</h3></div>
+                <div class="panel-body">
+                    <div class="three columns">
+                        <img class="center thumbnail" src="{{ author.photo_url }}"  height="120" width="120"></img>
+                        {% if sub_stat == "Follow" %}
+                        <button id="btn-follow" class="btn btn-success">
+                            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                             Follow
+                        </button>
+                        {% else %}
+                            {% if sub_stat == "Unfollow" %}
+                            <button id="btn-follow" class="btn btn-warning">
+                                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                                Unfollow
+                            </button>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                
+                    <div class="nine columns">
+                        <aside class="pull-quote">
+                            <blockquote>
+                                <p>{{ author.intro }}</p>
+                                <cite><strong><a href="{% url 'status' author.user.pk %}">{{ author.user }}</a></strong></cite>
+                            </blockquote>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+            <hr>
+                 <!-- Comments
+             ================================================== -->
+             <div id="comments">
+                <h3>{% get_comment_count for post as comment_count %}{{comment_count}} Comments</h3>
+               
+                {% get_comment_list for post as comment_list %}
+                <ol class="commentlist">
+                    {% for comment in comment_list %}
+                        <li class="depth-1">
+                           <div class="avatar">
+                              <img width="120" height="120" src="{{ comment.user_url }}" alt="">
+                           </div>
+                           <div class="comment-content">
+                               <div class="comment-info">
+                                  <cite>{{ comment.user_name }} / {{ comment.user_email }}</cite>
+                                  {% if user.is_authenticated and comment.user == user %}
+                                    <a href="{% url 'delete_own_comment' comment.id %}">
+                                        <i class="fa fa-trash-o fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                  {% endif %}
+                                  <div class="comment-meta">
+                                     <span class="comment-time">{{ comment.submit_date }}</span>
+                                  </div>
+                               </div>
+                               <div class="comment-text">
+                                   <p>{{ comment.comment }}</p>
+                               </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ol>
+
+                {% get_comment_form for post as form %}
+                {% if user.is_authenticated %}
+                    <h3>Hey, {{ user.username }}. Why not leave a comment.</h3>
+                    <form action="{% comment_form_target %}" method="post">
+                    {% csrf_token %}
+                        {% for field in form %}
+                            {% ifequal field.name "name" %}
+                            <div class="group">
+                                <label>Name</label>
+                                <input id="id_name" type="text" name="name" value="{{ user.username }}" readonly/>
+                            </div>
+                            {% else %}
+                                {% ifequal field.name "email"  %}
+                                <div class="group" style="display:none" >
+                                    <input type="email" name="email" value="{{ user.email }}" id="id_email" readonly/>
+                                </div>
+                                {% else %}
+                                    {% ifequal field.name "url" %}
+                                    <div class="group"  style="display:none" >
+                                        <label>Url</label>
+                                        <input type="url" name="url" id="id_url" value="{{ reader.photo_url }}">
+                                    </div>
+                                    {% else %}
+                                        {% ifequal field.name "comment" %}
+                                        <div class="group">
+                                            {% if field.errors %}{{ field.errors }}{% endif %}
+                                            <label>Comment</label>
+                                            <textarea name="comment" required></textarea>
+                                        </div>
+                                        {% else %}
+                                            <div class="group others" style="display:none"  >
+                                                {{ field }}
+                                            </div>
+                                        {% endifequal %}
+                                    {% endifequal %}
+                                {% endifequal %}
+                            {% endifequal %}
+                        {% endfor %}    
+                        <button class="submit-post" type="submit" >POST</button>
+                        <input type="hidden" name="next" value="{% url 'post_article' post.id %}"/>
+                    </form>
+                    
+                {% else %}
+                    <h3>Login first to leave a comment.</h3>
+                    <a class="button" href="/accounts/login/">LOG IN</a>
+                    <p>Not a member ? 
+                        <a href="/accounts/register/">Register</a>.
+                    </p>
+                {% endif %}
+                    
+             </div>  <!-- Comments End -->		
+                 
+            </div> <!-- main End -->
+ 
+           </div> <!-- end row -->
+ 
+    </div> <!-- end content-wrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        $("#btn-follow").click(function() {
+                $.getJSON("{% url 'ajax-follow' author.pk %}", function(ret){
+                        if (ret == "Follow") {
+                            $("#btn-follow").removeClass("btn-success");
+                            $("#btn-follow").addClass("btn-warning");
+                            $("#btn-follow").html('<span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> Unfollow');
+                        }
+                        else {
+                            $("#btn-follow").removeClass("btn-warning");
+                            $("#btn-follow").addClass("btn-success");
+                            $("#btn-follow").html('<span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> Follow');
+                        }
+                });
+        });
+
+        $("#btn-like").click(function() {
+            var cnt = 0;
+            $.getJSON("{% url 'ajax-like' post.pk %}", function(ret){
+                    if (ret == "Like") {
+                        $("#btn-like").addClass("active");
+                        cnt = $("#like_cnt").text();
+                        $("#like_cnt").text(parseInt(cnt) + 1);
+                    }
+                    else {
+                        $("#btn-like").removeClass("active");
+                        cnt = $("#like_cnt").text();
+                        $("#like_cnt").text(parseInt(cnt) - 1);
+                    }
+            });
+    });
+    </script>
+{% endblock %}

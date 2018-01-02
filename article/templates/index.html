@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load comments %}
+{% load filter %}
+
+{% block title %}Dank Memes{% endblock %}
+
+{% block content %}
+   <!-- Content ================================================== -->
+    <div id="content-wrap">
+   	<div class="row">
+		<div id="main" class="eight columns">
+			{% for ps in post_ls %}
+				<article class="entry">
+					<header>
+						<h2>
+							<a href="{% url 'post_article' ps.pk %}">{{ ps.title }}</a>
+						</h2>
+						<div class="entry-meta">
+							<ul>
+								<li>{{ ps.last_mod }}</li>
+								<span class="meta-sep">&bull;</span>
+								<li>{{ ps.author }}</li>
+							</ul>
+						</div>
+					</header>
+					<div class="group">
+						{% for tag in ps.get_tags_as_list %}
+							<span class="label label-success"><i class="fa fa-tag" aria-hidden="true"></i> {{ tag }}</span>
+						{% endfor%}
+					</div>
+				</article>
+				<hr>
+			{% endfor %}
+
+			{% if post_ls.has_other_pages %}
+			<nav class="pagination add-bottom">
+				{% if post_ls.has_previous %}
+					<a class="page-numbers prev nounderline" href="?page={{ post_ls.previous_page_number }}">Prev</a>
+				{% else %}
+					<span class="page-numbers prev inactive">Prev</span>
+				{% endif %}
+
+				{% for i in post_ls.paginator.page_range %}
+					{% if post_ls.number == i %}
+						<span class="page-numbers current">{{ i }}</span>
+					{% else %}
+						<a class="page-numbers nounderline" href="?page={{ i }}">{{ i }}</a>
+					{% endif %}
+				{% endfor %}
+
+				{% if post_ls.has_next %}
+					<a class="page-numbers next nounderline" href="?page={{ post_ls.next_page_number }}">Next</a>
+				{% else %}
+					<span class="page-numbers next inactive">Next</span>
+				{% endif %}
+			</nav>
+			{% endif %}
+		</div>
+
+   		<div id="sidebar" class="four columns">
+			<div class="widget widget_search">
+				<h3>Search</h3> 
+				<form action="{% url 'article_search' %}" method="post">
+					{% csrf_token %}
+					<input type="text" name="search" placeholder="Search here..." class="text-search">
+					<input type="submit" value="" class="submit-search">
+				</form>
+			</div>
+	  
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title"><i class="fa fa-cog" aria-hidden="true"></i> Functions</h3>
+				</div>
+				<div class="panel-body">
+					{% if user.is_authenticated %}
+						<a class="button nounderline" href="{% url 'post_new_article' %}"><i class="fa fa fa-plus fa-lg" aria-hidden="true"></i> Post</a>
+						<a class="button nounderline" href="{% url 'status' user.pk %}"><i class="fa fa-bars fa-lg" aria-hidden="true"></i> Statistics</a>
+						<a class="button nounderline" href="{% url 'profile' %}"><i class="fa fa-user fa-lg" aria-hidden="true"></i> Account</a>
+					{% else %}
+					<p><i class="fa fa-exclamation" aria-hidden="true"></i> Sorry, no function for you.</p>
+					{% endif %}
+
+					</div>
+			</div>
+
+            <div class="widget widget_popular">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Recommendation</h3>
+					</div>
+					<div class="panel-body">
+						<ul class="disc">
+							{% if recommend %}
+								{% for a in recommend %}
+									<li><a href="{% url 'post_article' a.pk %}">{{ a.title }}</a></li>
+								{% endfor %}
+							{% else %}
+								<p><i class="fa fa-exclamation" aria-hidden="true"></i> Sorry, no recommendation for you.</p>
+							{% endif %}
+						</ul>
+					</div>
+				</div>
+			</div>
+
+   		</div> <!-- end sidebar -->
+   	</div> <!-- end row -->
+   </div> <!-- end content-wrap -->
+   
+{% endblock %}

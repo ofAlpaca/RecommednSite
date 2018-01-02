@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}Account Statistics{% endblock %}
+
+{% block content %}
+<div id="status">
+    <h1>Account Statistics</h1>
+    <div class="twelve columns">
+        <h4>Basic Info</h4>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!--i class="fa fa-user fa-5x"></i-->
+                        <img class="thumbnail" src="{{profile.photo_url}}">
+                    </div>
+                    <div class="col-xs-9 text-left">
+                        <div><strong>Username: </strong> {{ profile.user }}</div>
+                        <div><strong>Email: </strong> {{ profile.user.email }}</div>
+                        <div><strong>Signature: </strong> {{ profile.intro }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+        <h4>Hot Points</h4>
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="glyphicon glyphicon-fire fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ like_cnt }}</div><br>
+                        <div>How many point do you get</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                Hot Ratio 
+                <div class="progress">
+                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ like_avg }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ like_avg }}%;">
+                    {{ like_avg }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+        <h4>Post Number</h4>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="glyphicon glyphicon-file fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ post_cnt }}</div><br>
+                        <div>How many article do you post</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                Contribution Ratio
+                <div class="progress">
+                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="{{post_pct}}" aria-valuemin="0" aria-valuemax="100" style="width: {{post_pct}}%;">
+                        {{ post_pct }}%
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+        <h4>Followers</h4>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <i class="glyphicon glyphicon-link fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">{{ fol_cnt }}</div><br>
+                        <div>How many follower do you have</div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer"style="padding:10px;">
+                {% for sub in profile.subers.all %}
+                    <span class="label label-warning">{{ sub }}</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="six columns">
+            <h4>Following</h4>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="glyphicon glyphicon-eye-open fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">{{ sub_cnt }}</div><br>
+                            <div>Who is your favorite</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer"style="padding:10px;">
+                    {% for sub in profile.subs.all %}
+                        <span class="label label-success">{{ sub }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+</script>
+{% endblock %}
